@@ -1,4 +1,4 @@
-from __future__ import division
+#from __future__ import division
 import scipy.io.wavfile
 import struct
 from pylab import *
@@ -64,10 +64,10 @@ def recognizeGender(sample):
             amp.append(spectrum[i])
     index = amp.index(max(amp))
     avg_freq = freq[index]
-    if avg_freq < 175:
-        return 'M'
+    if avg_freq < 173:
+        return 'M', avg_freq
     else:
-        return 'K'
+        return 'K', avg_freq
 
 
 def launchAlgorithm(samples, counters):
@@ -77,7 +77,7 @@ def launchAlgorithm(samples, counters):
 
     print "Launching algorithm..."
     for s in samples:
-        gender = recognizeGender(s)
+        gender, avf = recognizeGender(s)
 
         if gender == s['nameGender']:
             wellRecognized += 1
@@ -89,9 +89,9 @@ def launchAlgorithm(samples, counters):
             else:
                 print "...algorithm returned wrong value: ", s['name']
 
-            print "...", s['name'], "...ok!"
+            print "...", s['name'], "...ok!", avf
         else:
-            print "...", s['name'], "...not so good"
+            print "...", s['name'], "...not so good", avf
 
     samplesCount = counters['maleCount'] + counters['femaleCount']
     print "\nStatistics..."
